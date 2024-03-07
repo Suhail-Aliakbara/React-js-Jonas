@@ -13,6 +13,7 @@ function TipCalculator() {
   const [bill, setBill] = useState("");
   const [percentage1, setPercentage1] = useState(0);
   const [percentage2, setPercentage2] = useState(0);
+  const [people, setPeople] = useState(1);
 
   const tip = bill * ((percentage1 + percentage2) / 2 / 100);
 
@@ -20,6 +21,7 @@ function TipCalculator() {
     setBill("");
     setPercentage1(0);
     setPercentage2(0);
+    setPeople(1);
   }
 
   return (
@@ -34,7 +36,8 @@ function TipCalculator() {
 
       {bill > 0 && (
         <>
-          <Output bill={bill} tip={tip} />
+          <SelectPeople people={people} onSetPeople={setPeople} />
+          <Output bill={bill} tip={tip} people={people} />
           <Reset onReset={handleReset} />
         </>
       )}
@@ -72,11 +75,27 @@ function SelectPercentage({ children, percentage, onSelect }) {
     </div>
   );
 }
-
-function Output({ bill, tip }) {
+function SelectPeople({ people, onSetPeople }) {
+  return (
+    <div>
+      <label>Number of people</label>
+      <input
+        type="number"
+        min="1"
+        value={people}
+        onChange={(e) => onSetPeople(Number(e.target.value))}
+      />
+    </div>
+  );
+}
+function Output({ bill, tip, people }) {
+  const total = bill + tip;
+  const perPerson = total / people;
   return (
     <h3>
-      You pay ${bill + tip} (${bill} + ${tip} tip)
+      Total: ${total.toFixed(2)} (${bill.toFixed(2)} + ${tip.toFixed(2)} tip)
+      <br />
+      Per person: ${perPerson.toFixed(2)}
     </h3>
   );
 }
