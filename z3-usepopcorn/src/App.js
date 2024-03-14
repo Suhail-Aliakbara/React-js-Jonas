@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tempMovieData = [
   {
@@ -50,13 +50,80 @@ const tempWatchedData = [
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+const key = "e49d4cdf";
+
+//www.omdbapi.com/?i=tt3896198&apikey=e49d4cdf
+
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [query, setQuery] = useState("inception");
+
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  /*
+  useEffect(function () {
+    console.log("After initial render");
+  }, []);
+
+  useEffect(function () {
+    console.log("After every render");
+  });
+
+  useEffect(
+    function () {
+      console.log("D");
+    },
+    [query]
+  );
+
+  console.log("During render");
+*/
+
+  useEffect(() => {
+    async function fetchMovies() {
+      try {
+        setIsLoading(true); // Start loading
+        setError(""); // Clear previous error
+
+        const res = await fetch(
+          `https://www.omdbapi.com/?s=${query}&apikey=${key}`
+        );
+
+        if (!res.ok)
+          // Check if the response is ok
+          throw new Error("Something went wrong! while fetching the data");
+
+        const data = await res.json(); // Parse the response
+
+        if (data.Response === "False") throw new Error("No movies found"); // Check if the response is False
+
+        setMovies(data.Search);
+      } catch (err) {
+        // Catch any error
+
+        console.error(err.message);
+        setError(err.message);
+      } finally {
+        // This block will always run
+
+        setIsLoading(false);
+      }
+    }
+    if (query.length < 3) {
+      // If the query is less than 3 characters, clear the movies and error
+      setMovies([]);
+      setError("");
+      return;
+    }
+    fetchMovies();
+  }, [query]); // This will run when the query changes
+
   return (
     <>
       <Navbar>
-        <SearchInput />
+        <SearchInput query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </Navbar>
 
@@ -71,14 +138,33 @@ export default function App() {
           } />
           */}
         <Box>
-          <MovieList movies={movies} />
+          {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
+          {isLoading && <Loader />}
+          {/* If isLoading is true, show the Loader */}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {/* If isLoading is false and there is no error, show the MovieList */}
+          {error && <ErrorMessage message={error} />}
+          {/* If there is an error, show the ErrorMessage */}
+          {}
         </Box>
+
         <Box>
-          <WatchedSummary watched={tempWatchedData} />
-          <WatchedMoviesList watched={tempWatchedData} />
+          <WatchedSummary watched={watched} />
+          <WatchedMoviesList watched={watched} />
         </Box>
       </Main>
     </>
+  );
+}
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>⛔</span>
+      {message}
+    </p>
   );
 }
 
@@ -98,8 +184,7 @@ function Logo() {
     </div>
   );
 }
-function SearchInput() {
-  const [query, setQuery] = useState("");
+function SearchInput({ query, setQuery }) {
   return (
     <input
       className="search"
