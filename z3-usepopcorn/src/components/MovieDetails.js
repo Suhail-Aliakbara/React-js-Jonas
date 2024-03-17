@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useKey } from "../useKey";
+import { useKey } from "../customHook/useKey";
 import Loader from "./Loader";
 import StarRating from "./StarRating";
 

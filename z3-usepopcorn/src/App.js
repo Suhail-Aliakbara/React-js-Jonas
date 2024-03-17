@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Box from "./components/Box";
 import ErrorMessage from "./components/ErrorMessage";
 import Loader from "./components/Loader";
@@ -10,8 +10,8 @@ import NumResults from "./components/NumResults";
 import Search from "./components/Search";
 import WatchedMoviesList from "./components/WatchedMoviesList";
 import WatchedSummary from "./components/WatchedSummary";
-import { useLocalStorageState } from "./useLocalStorageState";
-import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./customHook/useLocalStorageState";
+import { useMovies } from "./customHook/useMovies";
 
 const tempMovieData = [
   {
