@@ -345,6 +345,58 @@ body {
   justify-content: center;
 }
 
+/* ------Loader Component------ */
+
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* This will center the loader vertically */
+}
+
+.loader {
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ------Error Component------ */
+.error-message {
+  padding: 20px;
+  margin: 10px 0;
+  border: 1px solid red;
+  background-color: #ffe6e6;
+  color: red;
+  border-radius: 5px;
+}
+
+.error-message h2 {
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 1.5em;
+}
+
+.error-message p {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.error-message span {
+  margin-right: 5px;
+}
+
 /*
 SPACING SYSTEM (px)
 2 / 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 80 / 96 / 128
